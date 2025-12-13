@@ -1,10 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import ChatBox from './ChatBox';
+// frontend/src/index.js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./chat.css";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <ChatBox />
-  </React.StrictMode>
-);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);

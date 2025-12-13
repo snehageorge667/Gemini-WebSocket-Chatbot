@@ -1,11 +1,14 @@
-import requests
-import json
+import os
+import google.generativeai as genai
 
-API_KEY = "AIzaSyAWSdZLDxZUjSB4LsWF_35POU3KF3yetRs"
+# Make sure your ENV var is set
+API_KEY = os.environ.get("GEMINI_API_KEY")
+if not API_KEY:
+    raise RuntimeError("Set GEMINI_API_KEY before running this script")
 
-url = f"https://generativelanguage.googleapis.com/v1beta/models?key={API_KEY}"
+genai.configure(api_key=API_KEY)
 
-response = requests.get(url, headers={"Content-Type": "application/json"})
-
-print(response.status_code)
-print(json.dumps(response.json(), indent=2))
+print("Listing models that support generateContent:\n")
+for m in genai.list_models():
+    if "generateContent" in getattr(m, "supported_generation_methods", []):
+        print(m.name)

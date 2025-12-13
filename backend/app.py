@@ -1,70 +1,42 @@
-from flask import Flask, request, jsonify
+import os
+from flask import Flask
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 import google.generativeai as genai
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# -------------------------
-# CONFIGURE GEMINI API
-# -------------------------
-API_KEY = "AIzaSyD9R3Hbl_sVHe4AiAZKe8lf2G9hIn8LPso"  
-genai.configure(api_key=API_KEY)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-# -------------------------
-# USE MODEL WITH AVAILABLE QUOTA
-# -------------------------
-MODEL_NAME = "models/gemini-flash-lite-latest"  # Switch to available model
-model = None
+# Configure Gemini API key
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-try:
-    model = genai.GenerativeModel(MODEL_NAME)
-    print(f"✅ Using model: {MODEL_NAME}")
-except Exception as e:
-    print("❌ Failed to load Gemini model:", e)
+# Use Free Tier model to avoid quota/payment issues
+model = genai.GenerativeModel("models/gemini-flash-lite-latest")
 
-# -------------------------
-# CHAT ENDPOINT
-# -------------------------
-@app.route("/chat", methods=["POST"])
-def chat():
-    if not model:
-        return jsonify({
-            "response": "Gemini model not loaded. Check backend logs.",
-            "error": "Model initialization failed."
-        }), 500
+@app.route("/")
+def home():
+    return "WebSocket Chatbot Running!"
+
+@socketio.on("user_message")
+def handle_user_message(data):
+    user_text = data.get("message", "")
+    if not user_text.strip():
+        emit("bot_message", {"reply": "Please type something."})
+        return
 
     try:
-        data = request.get_json()
-        user_input = data.get("message", "").strip()
-
-        if not user_input:
-            return jsonify({"response": "Please provide a valid message."}), 400
-
-        # -------------------------
-        # Send message to Gemini
-        # -------------------------
-        response = model.generate_content(user_input)
-
-        # -------------------------
-        # Check if response is valid
-        # -------------------------
-        if not response or not hasattr(response, "text"):
-            return jsonify({"response": "No response from Gemini model."}), 500
-
-        return jsonify({"response": response.text})
-
+        response = model.generate_content(user_text)
+        bot_reply = response.text if response else "Sorry, I could not generate a reply."
+        emit("bot_message", {"reply": bot_reply})
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return jsonify({
-            "response": "Error connecting to Gemini API. Check backend logs for details.",
-            "error": str(e)
-        }), 500
+        emit("bot_message", {"reply": f"Backend error: {e}"})
 
-# -------------------------
-# MAIN
-# -------------------------
 if __name__ == "__main__":
-    print("Starting Flask server on http://127.0.0.1:5000 ...")
-    app.run(debug=True)
+    print("Backend running on WebSocket (Free Tier model)...")
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
