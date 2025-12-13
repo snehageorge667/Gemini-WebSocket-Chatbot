@@ -1,0 +1,103 @@
+/* Floating Chat Bubble */
+.chat-bubble {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background-color: #4a90e2;
+  color: white;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Chat Window */
+.chat-window {
+  position: fixed;
+  bottom: 100px;
+  right: 25px;
+  width: 360px;
+  height: 520px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9998;
+}
+
+.chat-header {
+  background: #4a90e2;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background: #f4f4f6;
+}
+
+.welcome-text {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  font-size: 16px;
+}
+
+/* Message bubbles */
+.chat-msg {
+  max-width: 78%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+}
+
+.chat-msg.user {
+  background: #d1eaff;
+  margin-left: auto;
+  text-align: right;
+}
+
+.chat-msg.bot {
+  background: #fff9e6;
+  margin-right: auto;
+  text-align: left;
+}
+
+.chat-input-box {
+  display: flex;
+  border-top: 1px solid #e6e6e6;
+  padding: 8px;
+}
+
+.chat-input-box input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+}
+
+.chat-input-box button {
+  margin-left: 8px;
+  padding: 10px 14px;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
