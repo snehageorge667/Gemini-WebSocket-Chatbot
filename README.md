@@ -1,7 +1,7 @@
-#Gemini-WebSocket-Chatbot
+# Gemini-WebSocket-Chatbot
 A real-time AI chatbot built using Google Gemini API, Flask, and WebSockets for low-latency, bidirectional communication.
 
-Features
+# Features
 
 Real-time chat using WebSockets
 
@@ -11,13 +11,13 @@ Flask-based backend for AI inference
 
 Simple React frontend chat interface
 
-Tech Stack
+# Tech Stack
 
 Backend: Python, Flask, WebSockets, Gemini API
 Frontend: React, JavaScript
 Tools: Git, GitHub
 
-Architecture
+# Architecture
 
 Persistent WebSocket connection between client and server
 
